@@ -13,7 +13,7 @@ export const Default = Template.bind({});
 
 Default.args = {
   tag: 'div',
-  exponent: 4,
-  round: 30,
-  quality: 1,
+  //exponent: 4,
+  //round: 30,
+  //quality: ,
 };

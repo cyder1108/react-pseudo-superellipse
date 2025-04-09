@@ -32,7 +32,7 @@ export const SuperEllipse = ({
       computedRadius = radiusArg;
       computedRound = (2 / exponent) * radiusArg;
     }
-    return { computedRadius, computedRound, arcSteps: Math.max(1, Math.round( computedRound / 2 * Math.PI * quality )) };
+    return { computedRadius, computedRound, arcSteps: Math.max(1, Math.round( ( computedRound || 20 ) / 2 * Math.PI * quality )) };
   }, [roundArg, radiusArg, exponent]);
 
   const quarterSuperEllipse = useCallback((
