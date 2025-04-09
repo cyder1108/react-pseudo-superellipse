@@ -43,6 +43,7 @@ export default App;
 |radius|number|—|Sets the radius used for generating the clip path. This value is used for calculations if round is not provided.|
 |round|number|—|Similar to a standard CSS border-radius. It allows you to define the curvature. When provided, it is used to compute the internal radius.|
 |quality|number|0.5|Affects the number of calculated steps for generating the curve. Increasing this value yields a smoother curve but may impact performance.|
+
 Any additional standard HTML attributes (e.g., className, onClick) are forwarded to the component’s root element.
 
 
