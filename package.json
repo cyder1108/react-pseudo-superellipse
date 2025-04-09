@@ -22,6 +22,10 @@
     "LICENSE",
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/cyder1108/react-pseudo-superellipse.git"
+  },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
     "@rollup/plugin-commonjs": "^28.0.3",
