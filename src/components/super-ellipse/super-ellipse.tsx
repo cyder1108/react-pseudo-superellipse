@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef, useEffect, useMemo, useCallback } from "react";
 
 export type SuperEllipseProps = React.HTMLAttributes<HTMLDivElement> & {
