@@ -2,6 +2,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
 import pkg from './package.json' assert { type: 'json' };
+import { addDirective } from 'rollup-plugin-add-directive';
 
 export default [
   {
@@ -19,6 +20,7 @@ export default [
       },
     ],
     plugins: [
+      addDirective(),
       commonjs({
         include: ['node_modules/**'],
       }),
