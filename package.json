@@ -15,7 +15,7 @@
     "build-storybook": "storybook build"
   },
   "author": "Kazushi Kaneko",
-  "license": "ISC",
+  "license": "MIT",
   "files": [
     "package.json",
     "README.md",
