@@ -3,6 +3,7 @@
 ## Overview
 
 The `SuperEllipse` component is a React-based utility for dynamically generating a clip path that shapes an element like a superellipse. You can customize the shape using properties such as `exponent`, `radius`, and `round`. A `quality` parameter allows you to control the smoothness of the curve.
+
 ## Installation
 
 Ensure that your project already uses React. Then, include the component in your project. For example, if you are publishing it as an npm package:
@@ -26,7 +27,7 @@ const App = () => {
       round={40}     // Defines a border-radius-like curvature
       quality={0.5}  // Controls the smoothness of the curve
     >
-      Sample Content
+      Content
     </SuperEllipse>
   );
 };
@@ -34,16 +35,29 @@ const App = () => {
 export default App;
 ```
 
+**Responsive Customization**
+
+For a responsive design, you can set round or radius using an object to define values based on breakpoints. For example, you can configure them as follows:
+
+``` jsx
+<SuperEllipse round={{
+  default: 10,
+  400: 20,
+  600: 30,
+}}>
+  Content
+</SuperEllipse>
+```
+
 ## Component Properties
 
-|**Property**|**Type**|**Default**|**Description**|
-|---|---|---|---|
-|tag|React.ElementType|"div"|Specifies the HTML element used to wrap the component.|
-|exponent|number|4|Determines the curvature of the superellipse. A higher value results in a shape with smoother and rounder corners.|
-|radius|number|—|Sets the radius used for generating the clip path. This value is used for calculations if round is not provided.|
-|round|number|—|Similar to a standard CSS border-radius. It allows you to define the curvature. When provided, it is used to compute the internal radius.|
-|quality|number|0.5|Affects the number of calculated steps for generating the curve. Increasing this value yields a smoother curve but may impact performance.|
-
+| **Property** | **Type**          | **Default** | **Description**                                                                                                                                    |
+| ------------ | ----------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| tag          | React.ElementType | “div”       | Specifies the HTML element used to wrap the component.                                                                                             |
+| exponent     | number            | 4           | Determines the curvature of the superellipse. A higher value results in a shape with smoother and rounder corners.                                 |
+| radius       | number or object  | —           | Sets the radius used for generating the clip path. This value (or object for responsive design) is used for calculations if round is not provided. |
+| round        | number or object  | —           | Similar to a standard CSS border-radius. It allows you to define the curvature. When provided, it is used to compute the internal radius.          |
+| quality      | number            | 0.5         | Affects the number of calculated steps for generating the curve. Increasing this value yields a smoother curve but may impact performance.         |
 Any additional standard HTML attributes (e.g., className, onClick) are forwarded to the component’s root element.
 
 

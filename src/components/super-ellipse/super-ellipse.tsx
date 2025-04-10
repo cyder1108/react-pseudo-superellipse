@@ -1,11 +1,16 @@
 "use client";
-import React, { useRef, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
+
+export type SuperEllipseResponsiveParams = {
+  [key: string]: number
+} & { default: number }
+
 
 export type SuperEllipseProps = React.HTMLAttributes<HTMLDivElement> & {
   tag?: React.ElementType;
   exponent?: number;
-  radius?: number;
-  round?: number; // 一般的なborder-radiusに近い角丸
+  radius?: number|SuperEllipseResponsiveParams;
+  round?: number|SuperEllipseResponsiveParams; // 一般的なborder-radiusに近い角丸
   quality?: number;
 };
 
@@ -22,18 +27,45 @@ export const SuperEllipse = ({
 }: SuperEllipseProps) => {
   const ref = useRef<HTMLElement>(null);
 
+  const [width, setWidth] = useState<null|number>(null);
+
   const { computedRadius, computedRound, arcSteps } = useMemo(() => {
     let computedRound = 0;
     let computedRadius: number | undefined;
-    if (roundArg !== undefined) {
-      computedRound = roundArg;
-      computedRadius = (exponent / 2) * roundArg;
-    } else if (radiusArg !== undefined) {
-      computedRadius = radiusArg;
-      computedRound = (2 / exponent) * radiusArg;
+
+    const round = (() => {
+      if( typeof roundArg === "number" ) return roundArg;
+      if( typeof roundArg === "object" ) {
+        const { default: defaultRound, ...rest } = roundArg;
+        if( width === null ) return defaultRound;
+        const key = Math.max( -1, ...Object.keys(rest).map(k => +k).filter( k => width >= +k ) );
+        if( key < 0 ) return defaultRound;
+        return rest[key];
+      }
+      return void 0
+    })();
+
+    const radius = (() => {
+      if( typeof radiusArg === "number" ) return radiusArg;
+      if( typeof radiusArg === "object" ) {
+        const { default: defaultRadius, ...rest } = radiusArg;
+        if( width === null ) return defaultRadius;
+        const key = Math.max( -1, ...Object.keys(rest).map(k => +k).filter( k => width >= +k ) );
+        if( key < 0 ) return defaultRadius;
+        return rest[key];
+      }
+      return void 0
+    })();
+
+    if ( round !== void 0 ) {
+      computedRound = round;
+      computedRadius = (exponent / 2) * round;
+    } else if (radius !== void 0 ) {
+      computedRadius = radius;
+      computedRound = (2 / exponent) * radius;
     }
     return { computedRadius, computedRound, arcSteps: Math.max(1, Math.round( ( computedRound || 20 ) / 2 * Math.PI * quality )) };
-  }, [roundArg, radiusArg, exponent]);
+  }, [width, roundArg, radiusArg, exponent]);
 
   const quarterSuperEllipse = useCallback((
     cx: number,
@@ -93,6 +125,7 @@ export const SuperEllipse = ({
     if (!el) return;
     const updateClipPath = () => {
       const { offsetWidth: W, offsetHeight: H } = el;
+      setWidth(W);
       const path = buildClipPath(W, H).replace(/\s+/g, " ").trim();
       el.style.clipPath = `path('${path}')`;
     };
@@ -101,7 +134,7 @@ export const SuperEllipse = ({
     const ro = new ResizeObserver(updateClipPath);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [buildClipPath]);
+  }, [buildClipPath, setWidth]);
 
   return (
     <Component

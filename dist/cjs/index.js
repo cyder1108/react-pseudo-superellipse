@@ -42,19 +42,48 @@ const format = (n) => n.toFixed(2);
 const SuperEllipse = (_a) => {
     var { tag: Component = "div", style, exponent = 4, radius: radiusArg, round: roundArg, quality = 0.5 } = _a, rest = __rest(_a, ["tag", "style", "exponent", "radius", "round", "quality"]);
     const ref = React.useRef(null);
+    const [width, setWidth] = React.useState(null);
     const { computedRadius, computedRound, arcSteps } = React.useMemo(() => {
         let computedRound = 0;
         let computedRadius;
-        if (roundArg !== undefined) {
-            computedRound = roundArg;
-            computedRadius = (exponent / 2) * roundArg;
+        const round = (() => {
+            if (typeof roundArg === "number")
+                return roundArg;
+            if (typeof roundArg === "object") {
+                const { default: defaultRound } = roundArg, rest = __rest(roundArg, ["default"]);
+                if (width === null)
+                    return defaultRound;
+                const key = Math.max(-1, ...Object.keys(rest).map(k => +k).filter(k => width >= +k));
+                if (key < 0)
+                    return defaultRound;
+                return rest[key];
+            }
+            return void 0;
+        })();
+        const radius = (() => {
+            if (typeof radiusArg === "number")
+                return radiusArg;
+            if (typeof radiusArg === "object") {
+                const { default: defaultRadius } = radiusArg, rest = __rest(radiusArg, ["default"]);
+                if (width === null)
+                    return defaultRadius;
+                const key = Math.max(-1, ...Object.keys(rest).map(k => +k).filter(k => width >= +k));
+                if (key < 0)
+                    return defaultRadius;
+                return rest[key];
+            }
+            return void 0;
+        })();
+        if (round !== void 0) {
+            computedRound = round;
+            computedRadius = (exponent / 2) * round;
         }
-        else if (radiusArg !== undefined) {
-            computedRadius = radiusArg;
-            computedRound = (2 / exponent) * radiusArg;
+        else if (radius !== void 0) {
+            computedRadius = radius;
+            computedRound = (2 / exponent) * radius;
         }
         return { computedRadius, computedRound, arcSteps: Math.max(1, Math.round((computedRound || 20) / 2 * Math.PI * quality)) };
-    }, [roundArg, radiusArg, exponent]);
+    }, [width, roundArg, radiusArg, exponent]);
     const quarterSuperEllipse = React.useCallback((cx, cy, d, quadrant, // 0:bottom-right / 1:bottom-left / 2:top-left / 3:top-right
     exp, steps) => {
         const startAngle = (quadrant % 4) * (Math.PI / 2);
@@ -98,6 +127,7 @@ const SuperEllipse = (_a) => {
             return;
         const updateClipPath = () => {
             const { offsetWidth: W, offsetHeight: H } = el;
+            setWidth(W);
             const path = buildClipPath(W, H).replace(/\s+/g, " ").trim();
             el.style.clipPath = `path('${path}')`;
         };
@@ -105,7 +135,7 @@ const SuperEllipse = (_a) => {
         const ro = new ResizeObserver(updateClipPath);
         ro.observe(el);
         return () => ro.disconnect();
-    }, [buildClipPath]);
+    }, [buildClipPath, setWidth]);
     return (React.createElement(Component, Object.assign({ ref: ref, style: Object.assign(Object.assign({}, style), (!(style === null || style === void 0 ? void 0 : style.clipPath) ? { borderRadius: `${computedRound}px` } : {})) }, rest)));
 };
 
