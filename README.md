@@ -4,6 +4,8 @@
 
 The `SuperEllipse` component is a React-based utility for dynamically generating a clip path that shapes an element like a superellipse. You can customize the shape using properties such as `exponent`, `radius`, and `round`. A `quality` parameter allows you to control the smoothness of the curve.
 
+![react-pseudo-superellipse sample image](https://github.com/cyder1108/react-pseudo-superellipse/blob/master/image.png?raw=true)
+
 ## Installation
 
 Ensure that your project already uses React. Then, include the component in your project. For example, if you are publishing it as an npm package:
